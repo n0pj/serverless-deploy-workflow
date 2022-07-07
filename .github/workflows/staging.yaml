@@ -1,9 +1,10 @@
-name: staging
+name: master
 on:
   pull_request:
     branches:
-      - staging
+      - master
     types: [closed]
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -29,13 +30,12 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-
       - uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: '14'
 
-      - name: Install yarn
-        run: npm install -g yarn
+      - name: Install yarn, serverless
+        run: npm install -g yarn serverless@2.72.2
 
       - name: Install Dependencies
         run: yarn
@@ -44,4 +44,6 @@ jobs:
         run: yarn build
 
       - name: Run serverless
-        run: npx serverless@2.72.2
+        run: serverless
+        env:
+          SLS_INTERACTIVE_SETUP_ENABLE: 1
